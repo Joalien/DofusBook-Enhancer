@@ -37,10 +37,23 @@ function sortByResistance(data) {
     console.log('there is ' + sortedData.length + ' items to sort')
 
     sortedData.forEach(item => item.name += " (" + getSumOfRes(item) + "%)")
-    sortedData.sort((a, b) => getSumOfRes(a) < getSumOfRes(b) ? 1 : -1);
+    sortedData.sort((a, b) => sortItems(a, b));
     console.log('After sort, first item is ');
     console.log(sortedData[0]);
     return sortedData;
+}
+
+function sortItems(a, b) {
+    if (getLevelOf(a) < getLevelOf(b)) {
+        return 1;
+    } else if (getLevelOf(a) > getLevelOf(b)) {
+        return -1;
+    }
+    return getSumOfRes(a) < getSumOfRes(b) ? 1 : -1;
+}
+
+function getLevelOf(item) {
+    return item.level;
 }
 
 function getSumOfRes(item) {
