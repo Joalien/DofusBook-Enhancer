@@ -1,0 +1,22 @@
+{
+
+  "manifest_version": 2,
+  "name": "DofusBookPvp",
+  "version": "1.0",
+
+  "description": "Sort items by % resistance",
+
+  "icons": {
+    "48": "icons/border-48.png"
+  },
+
+  "permissions": [
+    "https://www.dofusbook.net/",
+    "webRequest",
+    "webRequestBlocking"
+  ],
+  "background": {
+    "scripts": ["proxyResponse.js"]
+  }
+}
+
