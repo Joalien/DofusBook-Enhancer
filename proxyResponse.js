@@ -1,42 +1,35 @@
-console.log("inside proxy response 2")
 let fullData = {};
 let authHeader = [];
 
 function listener(details) {
-    // details.originUrl = "https://www.dofusbook.net/fr/encyclopedie/recherche?context=cloth&display=mosaic&sort=desc";
-    // details.documentUrl = "https://www.dofusbook.net/fr/encyclopedie/recherche?context=cloth&display=mosaic&sort=desc";
     let filter = browser.webRequest.filterResponseData(details.requestId);
     let decoder = new TextDecoder("utf-8");
     let encoder = new TextEncoder();
+    const params = new Proxy(new URLSearchParams(details.url), {
+        get: (searchParams, prop) => searchParams.get(prop),
+    });
 
     filter.ondata = event => {
         let data = decoder.decode(event.data, {stream: true});
-        // Just change any instance of Example in the HTTP response
-        // to WebExtension Example.
         fullData[details.requestId] = fullData[details.requestId] === undefined ? data :  fullData[details.requestId] + data;
     }
 
     filter.onstop = event => {
         let parsedData = JSON.parse(fullData[details.requestId]);
-        
-        // make more requests and mock backend sort
-        const params = new Proxy(new URLSearchParams(details.url), {
-            get: (searchParams, prop) => searchParams.get(prop),
-        });
         if (params.page == 1) {
             for (let i = 2; i <= 3; i++) {
+                // send a new http request
                 let httpRequest = new XMLHttpRequest();
                 httpRequest.open("GET", details.url.replace('page=1', 'page=' + i), false);
                 authHeader.forEach(header => httpRequest.setRequestHeader(header.name, header.value))
                 httpRequest.send(null);
-                // get page i
-                console.log(httpRequest.response)
+                // merge with previous data
                 parsedData.data = parsedData.data.concat(JSON.parse(httpRequest.response).data);
             }
+            // sort once we get all data
             parsedData.data = sortByResistance(parsedData);
         }
-        let stringData = JSON.stringify(parsedData);
-        filter.write(encoder.encode(stringData));
+        filter.write(encoder.encode(JSON.stringify(parsedData)));
         filter.close();
         fullData[details.requestId] = undefined;
     }
@@ -45,7 +38,6 @@ function listener(details) {
 browser.webRequest.onBeforeSendHeaders.addListener(
     e => {
         authHeader = e.requestHeaders;
-        console.log("saving header")
         e.requestHeaders.push({name: "Referer", value: "https://www.dofusbook.net/fr/"})
         return {requestHeaders: e.requestHeaders};
     },

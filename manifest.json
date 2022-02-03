@@ -1,10 +1,8 @@
 {
   "manifest_version": 2,
-  "name": "DofusBookPvp",
-  "version": "1.0",
-
-  "description": "Sort items by % resistance",
-
+  "name": "DofusBook Enhancer",
+  "version": "1.1",
+  "description": "Add several functionalities to DofusBook like sorting by resistance, filter cloths by inner characteristics, summing cloths characteristics ...",
   "icons": {
     "48": "icons/border-48.png"
   },
@@ -18,4 +16,3 @@
     "scripts": ["proxyResponse.js"]
   }
 }
-
