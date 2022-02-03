@@ -28,7 +28,7 @@ function listener(details) {
 
 browser.webRequest.onBeforeRequest.addListener(
     listener,
-    {urls: ["https://www.dofusbook.net/items/dofus/search/*"]},
+    {urls: ["https://www.dofusbook.net/items/dofus/search/*", "https://www.dofusbook.net/api/cloths*"]},
     ["blocking"]
 );
 
@@ -57,6 +57,10 @@ function getLevelOf(item) {
 }
 
 function getSumOfRes(item) {
+    if (item.count_item != null) {
+       console.log("We are sorting cloths")
+       return Math.round(item.items.map(i => getSumOfRes(i)).reduce((a, b) => a + b, 0) / item.count_item);
+    }
     return item.effects
         .filter(effect => ["rnp", "rep", "rfp", "rap", "rtp",].includes(effect.name))
         .reduce((a, b) => parseInt(a) + parseInt(b.max), 0);
