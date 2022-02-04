@@ -1,3 +1,8 @@
+/* TODO
+ * add button to switch mode (normal/pvp)
+ * add button to switch mode between cloth_effect/full_effects
+ */
+
 let fullData = {};
 let authHeader = [];
 

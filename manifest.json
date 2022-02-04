@@ -4,7 +4,8 @@
   "version": "1.1",
   "description": "Add several functionalities to DofusBook like sorting by resistance, filter cloths by inner characteristics, summing cloths characteristics ...",
   "icons": {
-    "48": "icons/border-48.png"
+    "48": "casque_dragoeuf.svg",
+    "96": "casque_dragoeuf.svg"
   },
 
   "permissions": [
