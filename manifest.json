@@ -15,5 +15,11 @@
   ],
   "background": {
     "scripts": ["proxyResponse.js"]
-  }
+  },
+  "content_scripts": [
+    {
+      "matches": ["https://www.dofusbook.net/fr/encyclopedie/recherche*"],
+      "js": ["sortByResistanceButton.js"]
+    }
+  ]
 }

@@ -50,12 +50,21 @@ browser.webRequest.onBeforeSendHeaders.addListener(
     ["blocking", "requestHeaders"]
 );
 
-
-browser.webRequest.onBeforeRequest.addListener(
-    listener,
-    {urls: ["https://www.dofusbook.net/items/dofus/search/*", "https://www.dofusbook.net/api/cloths*"]},
-    ["blocking"]
-);
+browser.runtime.onMessage.addListener((request, _, __) => {
+    console.log("request")
+    console.log(request)
+    if (request === true && !browser.webRequest.onBeforeRequest.hasListener(listener)) {
+        console.log("consumer has been added")
+        browser.webRequest.onBeforeRequest.addListener(
+            listener,
+            {urls: ["https://www.dofusbook.net/items/dofus/search/*", "https://www.dofusbook.net/api/cloths*"]},
+            ["blocking"]
+        )
+    } else if (request === false && browser.webRequest.onBeforeRequest.hasListener(listener)) {
+        console.log("consumer has been removed")
+        browser.webRequest.onBeforeRequest.removeListener(listener)
+    }
+})
 
 function sortByResistance(data) {
     let sortedData = Array.from(data.data);
@@ -67,12 +76,12 @@ function sortByResistance(data) {
 }
 
 function sortItems(a, b) {
-    if (getLevelOf(a) < getLevelOf(b)) {
+    if (getSumOfRes(a) < getSumOfRes(b)) {
         return 1;
-    } else if (getLevelOf(a) > getLevelOf(b)) {
+    } else if (getSumOfRes(a) > getSumOfRes(b)) {
         return -1;
     }
-    return getSumOfRes(a) < getSumOfRes(b) ? 1 : -1;
+    return getLevelOf(a) < getLevelOf(b) ? 1 : -1;
 }
 
 function getLevelOf(item) {
